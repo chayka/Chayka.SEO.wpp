@@ -1,0 +1,12 @@
+.DS_Store
+.nodemonignore
+.sass-cache/
+.idea/
+npm-debug.log
+node_modules/
+vendor/
+composer.lock
+composer.phar
+data/
+res/lib/angular
+res/lib/jquery

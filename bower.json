@@ -1,0 +1,24 @@
+{
+    "name": "Chayka.SEO",
+    "description": "SEO WP plugin built with Chayka.Framework",
+    "version": "0.0.1",
+    "license": "Proprietary",
+    "authors": [
+        "Boris Mossounov <borix@tut.by>"
+    ],
+    "keywords": [
+        "WordPress",
+        "Chayka",
+        "seo",
+        "sitemap"
+    ],
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "res/lib",
+        "test",
+        "tests"
+    ],
+    "dependencies": {}
+}

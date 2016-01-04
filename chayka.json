@@ -1,0 +1,33 @@
+{
+    "appType": "plugin",
+    "appName": "Chayka.SEO",
+    "appDescription": "SEO WP plugin built with Chayka.Framework",
+    "appKeywords": "WordPress, Chayka, seo, sitemap",
+    "appVersion": "0.0.1",
+    "appAuthor": "Boris Mossounov",
+    "appAuthorEmail": "borix@tut.by",
+    "appAuthorUri": "https://anotherguru.me",
+    "appLicense": "Proprietary",
+    "phpNamespace": "Chayka\\SEO",
+    "chaykaFramework": "plugin",
+    "chaykaFrameworkDeps": {
+        "helpers": true,
+        "mvc": true,
+        "wp": true,
+        "core": true
+    },
+    "support": [
+        "UriProcessing",
+        "ConsolePages",
+        "Metaboxes"
+    ],
+    "register": [
+        "registerActions",
+        "registerFilters",
+        "registerResources",
+        "registerRoutes",
+        "registerConsolePages",
+        "registerMetaboxes",
+        "registerSidebars"
+    ]
+}

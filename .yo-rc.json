@@ -1,0 +1,49 @@
+{
+  "generator-chayka": {
+    "support": [
+      "UriProcessing",
+      "ConsolePages",
+      "Metaboxes"
+    ],
+    "register": [
+      "registerActions",
+      "registerFilters",
+      "registerResources",
+      "registerRoutes",
+      "registerConsolePages",
+      "registerMetaboxes",
+      "registerSidebars"
+    ],
+    "appType": "plugin",
+    "appName": "Chayka.SEO",
+    "appDescription": "SEO WP plugin built with Chayka.Framework",
+    "appKeywords": "WordPress, Chayka, seo, sitemap",
+    "appVersion": "0.0.1",
+    "packagistVendor": "chayka",
+    "packagistPackage": "seo-wpp",
+    "phpNamespace": "Chayka\\SEO",
+    "chaykaFramework": "plugin",
+    "chaykaFrameworkDeps": {
+      "helpers": true,
+      "mvc": true,
+      "wp": true,
+      "core": true
+    },
+    "initDep": true,
+    "initDepPhpClass": "Chayka\\WP\\Plugin",
+    "initDepMessage": "Chayka Framework functionality is not available",
+    "gitInit": true,
+    "gitRemote": "github",
+    "githubUser": "chayka",
+    "gitRemoteRepo": "git@github.com:chayka/Chayka.SEO.wpp.git",
+    "gitPush": true,
+    "ideaProject": "Chayka.SEO.wpp",
+    "ideaDeploymentPath": "/Chayka.SEO.wpp",
+    "appAuthor": "Boris Mossounov",
+    "appAuthorEmail": "borix@tut.by",
+    "appAuthorUri": "https://anotherguru.me",
+    "appLicense": "Proprietary",
+    "ideaDeploymentServer": "WP Plugins",
+    "appClass": "Plugin"
+  }
+}
