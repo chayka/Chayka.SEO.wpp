@@ -67,6 +67,8 @@ class Plugin extends WP\Plugin{
      * Registering console pages
      */
     public function registerConsolePages(){
+        $this->addConsolePage('SEO', 'update_core', 'seo', '/admin/seo', 'dashicons-admin-generic', '75.45830508344807');
+
         /* chayka: registerConsolePages */
     }
     

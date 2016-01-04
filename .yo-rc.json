@@ -44,6 +44,17 @@
     "appAuthorUri": "https://anotherguru.me",
     "appLicense": "Proprietary",
     "ideaDeploymentServer": "WP Plugins",
-    "appClass": "Plugin"
+    "appClass": "Plugin",
+    "helpers": [
+      "option"
+    ],
+    "consolePages": [
+      "seo"
+    ],
+    "controllers": {
+      "Admin": [
+        "seo"
+      ]
+    }
   }
 }

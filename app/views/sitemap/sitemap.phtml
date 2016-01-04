@@ -1,0 +1,11 @@
+<?php
+    $href = \Chayka\Helpers\Util::getAbsoluteUrl($this->sitemap->href);
+    $date = \Chayka\Helpers\DateHelper::datetimeToJsonStr($this->sitemap->date);
+?>
+<sitemap>
+
+    <loc><?php echo $href;?></loc>
+
+    <lastmod><?php echo $date;?></lastmod>
+
+</sitemap>

@@ -1,0 +1,23 @@
+<h2>SEO</h2>
+
+<div data-ng-cloak>
+    <div data-ng-controller="optionsForm" data-ng-init="namespace = 'Chayka.SEO'">
+        <form data-form-validator="validator" novalidate="novalidate">
+            <div class="form_field fullsize custom_sitemap_paths" data-form-field="customSitemapPaths">
+                <label class="">Custom Sitemap Paths</label><textarea data-ng-init="options.customSitemapPaths=''" data-ng-model="options.customSitemapPaths" title="Custom Sitemap Paths"></textarea>
+            </div>
+            <div class="note" data-ng-init="sitemapPackOptions = {'none':'No','yearly':'Yearly','monthly':'Monthly'}" ></div>
+            <?php $postTypes = get_post_types(['public'=>true]); unset($postTypes['page']); unset($postTypes['attachment']);?>
+            <?php foreach($postTypes as $postType):?>
+            <div class="form_field stretch sitemap_pack_<?php echo $postType?>" data-form-field="sitemap_pack_<?php echo $postType?>">
+                <label class="width50">Pack <?php echo $postType?></label><select data-ng-init="options.sitemap_pack_<?php echo $postType?> = 'none'" data-ng-model="options.sitemap_pack_<?php echo $postType?>" data-ng-options="key as value for (key, value) in sitemapPackOptions" title="Pack <?php echo $postType?>"></select>
+            </div>
+            <?php endforeach;?>
+
+	        <!-- chayka: fields -->
+            <div class="buttons">
+                <button class="button button-primary button-large" data-ng-click="saveOptions();">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

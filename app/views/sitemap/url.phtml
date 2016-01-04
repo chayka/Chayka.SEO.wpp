@@ -1,0 +1,36 @@
+<?php
+use Chayka\Helpers\Util;
+
+/**
+ * @var Chayka\WP\Models\PostModel $post
+ */
+$post = $this->post;
+
+$loc        = '/';
+$lastMod    = new DateTime();
+$changeFreq = 'monthly';
+$priority   = 0.5;
+
+if(is_array($post)){
+    $loc        = Util::getItem($post, 'loc', $loc);
+    $lastMod    = Util::getItem($post, 'lastmod', $lastMod);
+    $changeFreq = Util::getItem($post, 'changefreq', $changeFreq);
+    $priority   = Util::getItem($post, 'priority', $priority);
+}else if($post instanceof \Chayka\WP\Models\PostModel){
+    $loc     = $post->getHref();
+    $lastMod = $post->getDtModified();
+}
+
+
+?>
+<url>
+
+    <loc><?php echo Util::getAbsoluteUrl($loc);?></loc>
+
+    <lastmod><?php echo \Chayka\Helpers\DateHelper::datetimeToJsonStr($post->getDtModified());?></lastmod>
+
+    <changefreq>monthly</changefreq>
+
+    <priority>1</priority>
+
+</url>
