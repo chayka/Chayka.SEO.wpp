@@ -12,10 +12,34 @@ class SitemapHelper{
     public static function buildIndex(){
     }
 
-    public static function renderIndex($isCache = false, $forceRefresh = false){
+    public static function ensureCacheDir(){
+        $dirSitemap = ABSPATH . '/wp-content/sitemap';
+        $dirMsSitemap = $dirSitemap . '/' . Util::serverName();
+
+        return (is_dir($dirSitemap) || mkdir($dirSitemap)) &&
+               (is_dir($dirMsSitemap) || mkdir($dirMsSitemap));
+    }
+
+    public static function getSitemapDir($absPath = false){
+        $path = '/wp-content/sitemap/' . Util::serverName() . '/';
+        return $absPath ? ABSPATH . $path : $path;
+    }
+
+    public static function getSitemapIndexPath($absPath = false){
+        return self::getSitemapDir($absPath) . 'index.xml';
+    }
+
+    public static function getSitemapBarrelPath($postType, $barrel, $absPath = false){
+        return self::getSitemapDir($absPath) . sprintf('%s.%08x.xml', $postType, $barrel);
+    }
+
+    public static function getSitemapUrlsPath($absPath = false){
+        return self::getSitemapDir($absPath) . 'urls.xml';
+    }
+
+    public static function getBarrels($maxEntryPackSize = 0){
         $table = PostModel::getDbTable();
-        $maxEntryPackSize = OptionHelper::getOption('maxEntryPackSize', 10);
-        $indexPath = ABSPATH.'sitemap.xml';
+        $maxEntryPackSize = $maxEntryPackSize ? $maxEntryPackSize :OptionHelper::getOption('maxEntryPackSize', 10);
         $postTypes = get_post_types(['public'=>true]); unset($postTypes['attachment']);
         $enabledPostTypes = [];
         foreach($postTypes as $postType){
@@ -32,17 +56,21 @@ class SitemapHelper{
         GROUP BY barrel, post_type
         ", $maxEntryPackSize);
 
-        $data = DbHelper::selectSql($sql);
+        $barrels = DbHelper::selectSql($sql);
 
-
-        foreach($data as $item){
+        foreach($barrels as $item){
             $item->lastmod = DateHelper::dbStrToDatetime($item->lastmod);
-            $item->href = sprintf('/sitemap/%s/%s.%08x.xml', Util::serverName(), $item->post_type, $item->barrel);
-            echo self::renderPostTypePackIndex($item->post_type, $item->barrel, $maxEntryPackSize);
+            $item->href = self::getSitemapBarrelPath($item->post_type, $item->barrel, false);
         }
-//        Util::print_r($data);
 
-        echo self::renderSitemapIndex($data);
+        return $barrels;
+    }
+
+    public static function renderIndex($isCache = false, $forceRefresh = false){
+        $indexPath = ABSPATH.'sitemap.xml';
+//        Util::print_r($data);
+//        $data =
+//        echo self::renderSitemapIndex($data);
     }
 
     public static function renderCustomPathsIndex(){

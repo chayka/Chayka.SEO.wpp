@@ -2,7 +2,7 @@
 
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <?php foreach($this->sitemaps as $sitemap){
-    echo $this->render('sitemap/sitemap.phtml', ['sitemap' => $sitemap]);
+    echo $this->partial('sitemap/sitemap.phtml', ['sitemap' => $sitemap]);
 }?>
 
 </sitemapindex>
