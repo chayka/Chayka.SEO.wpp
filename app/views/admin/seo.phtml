@@ -7,12 +7,20 @@
                 <label class="">Custom Sitemap Paths</label><textarea data-ng-init="options.customSitemapPaths=''" data-ng-model="options.customSitemapPaths" title="Custom Sitemap Paths"></textarea>
             </div>
             <div class="note" data-ng-init="sitemapPackOptions = {'none':'No','yearly':'Yearly','monthly':'Monthly'}" ></div>
-            <?php $postTypes = get_post_types(['public'=>true]); unset($postTypes['page']); unset($postTypes['attachment']);?>
-            <?php foreach($postTypes as $postType):?>
-            <div class="form_field stretch sitemap_pack_<?php echo $postType?>" data-form-field="sitemap_pack_<?php echo $postType?>">
-                <label class="width50">Pack <?php echo $postType?></label><select data-ng-init="options.sitemap_pack_<?php echo $postType?> = 'none'" data-ng-model="options.sitemap_pack_<?php echo $postType?>" data-ng-options="key as value for (key, value) in sitemapPackOptions" title="Pack <?php echo $postType?>"></select>
+            <?php $postTypes = get_post_types(['public'=>true]); unset($postTypes['attachment']);?>
+            <div class="form_field stretch max_entry_pack_size" data-form-field="maxEntryPackSize">
+                <label class="width70">Max Entry Pack Size</label><input type="text" data-ng-init="options.maxEntryPackSize='10'" data-ng-model="options.maxEntryPackSize" title="Max Entry Pack Size"/>
             </div>
-            <?php endforeach;?>
+            <label>Sitemap Post Types:</label>
+            <div class="form_field checkboxes sitemap_need_type">
+                <?php foreach($postTypes as $postType):?>
+                <label>
+                    <input type="checkbox" data-ng-init="options.sitemap_need_type_<?php echo $postType?>='1'" data-ng-model="options.sitemap_need_type_<?php echo $postType?>" data-ng-true-value="'1'" data-ng-false-value="'0'" title="<?php echo $postType?>"/>
+                    <?php echo $postType?>
+                </label>
+                <?php endforeach;?>
+            </div>
+
 
 	        <!-- chayka: fields -->
             <div class="buttons">
