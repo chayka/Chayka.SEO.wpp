@@ -3,13 +3,92 @@
 namespace Chayka\SEO;
 
 use Chayka\Helpers\DateHelper;
+use Chayka\Helpers\FsHelper;
 use Chayka\Helpers\Util;
 use Chayka\WP\Helpers\DbHelper;
 use Chayka\WP\Models\PostModel;
 
 class SitemapHelper{
 
-    public static function buildIndex(){
+    public static function getRobotsContent(){
+        return "User-Agent: *\nSitemap: " . Util::getAbsoluteUrl('/api/sitemap/');
+    }
+
+    public static function ensureRobotsTxt(){
+        $fn = self::getRobotsPath();
+
+        if(!file_exists($fn)){
+            $robots = self::getRobotsContent();
+            file_put_contents($fn, $robots);
+        }
+
+        return $fn;
+    }
+
+    public static function patchRobotsTxt(){
+        $fn = self::getRobotsPath();
+        if(!file_exists($fn)){
+            self::ensureRobotsTxt();
+        }
+
+        $newRobots = $robots = file_get_contents($fn);
+
+        $re = '/\bSitemap:[^\n]*/ims';
+        if(!preg_match($re, $robots)){
+            $newRobots.="\n".self::getRobotsContent();;
+        }else{
+            $newRobots = preg_replace($re, "Sitemap: " . Util::getAbsoluteUrl('/api/sitemap/'), $robots);
+        }
+
+        if($newRobots !== $robots){
+            $backupFn = FsHelper::hideExtension($fn).date('.Y-m-d.H-i-s.').'txt';
+            file_put_contents($backupFn, $robots);
+            file_put_contents($fn, $newRobots);
+        }
+    }
+
+    public static function buildSitemap(){
+        set_time_limit(0);
+        SitemapHelper::ensureCacheDir();
+        $indexFn = SitemapHelper::getSitemapIndexPath(true);
+
+        if(file_exists($indexFn)){
+            return file_get_contents($indexFn);
+        }
+
+        $maxEntryPackSize = OptionHelper::getOption('maxEntryPackSize', 10);
+
+        $barrels = SitemapHelper::getBarrels($maxEntryPackSize);
+
+        foreach($barrels as $barrelData){
+            $barrelFn = SitemapHelper::getSitemapBarrelPath($barrelData->post_type, $barrelData->barrel, true);
+            if(!file_exists($barrelFn)){
+                file_put_contents($barrelFn, SitemapHelper::renderPostTypePackIndex($barrelData->post_type, $barrelData->barrel, $maxEntryPackSize));
+            }
+        }
+
+        $sitemapIndex = SitemapHelper::renderSitemapIndex($barrels);
+
+        file_put_contents($indexFn, $sitemapIndex);
+
+        return $sitemapIndex;
+    }
+
+    public static function flushSitemap(){
+        $dir = self::getSitemapDir(true);
+        if(is_dir(self::getSitemapDir(true))){
+            FsHelper::delete($dir);
+        }
+    }
+
+    public static function getRobotsPath(){
+        $fn = ABSPATH.'/robots.txt';
+
+        if($_SERVER['DOCUMENT_ROOT']){
+            $fn = $_SERVER['DOCUMENT_ROOT'].'/robots.txt';
+        }
+
+        return $fn;
     }
 
     public static function ensureCacheDir(){

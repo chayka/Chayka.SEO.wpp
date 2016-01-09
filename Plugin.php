@@ -20,6 +20,8 @@ class Plugin extends WP\Plugin{
 	        $app->addSupport_UriProcessing();
 	        $app->addSupport_ConsolePages();
 	        $app->addSupport_Metaboxes();
+	        $app->addSupport_PostProcessing(100);
+
 
 
             /* chayka: init-addSupport */
@@ -92,5 +94,56 @@ class Plugin extends WP\Plugin{
      */
     public function registerSidebars() {
 		/* chayka: registerSidebars */
+    }
+    
+    /* postProcessing */
+
+    /**
+     * This function should be triggered on post insert / update / delete
+     *
+     * @param $postId
+     */
+    public function updateSitemapBarrelForPostId($postId){
+        $post = WP\Models\PostModel::selectById($postId);
+        $postType = $post->getType();
+        $enabled = OptionHelper::getOption('sitemap_need_type_' . $postType);
+        if($enabled){
+            $packSize = OptionHelper::getOption('maxEntryPackSize', 10);
+            $barrel = floor($postId / $packSize);
+            $barrelFn = SitemapHelper::getSitemapBarrelPath($postType, $barrel, true);
+            $xml = SitemapHelper::renderPostTypePackIndex($postType, $barrel, $packSize);
+            file_put_contents($barrelFn, $xml);
+            $indexFn = SitemapHelper::getSitemapIndexPath(true);
+            unlink($indexFn);
+        }
+
+    }
+
+    /**
+     * This is a hook for save_post
+     *
+     * @param integer $postId
+     * @param \WP_Post $post
+     */
+    public function savePost($postId, $post){
+        $this->updateSitemapBarrelForPostId($postId);
+    }
+    
+    /**
+     * This is a hook for delete_post
+     *
+     * @param integer $postId
+     */
+    public function deletePost($postId){
+        $this->updateSitemapBarrelForPostId($postId);
+    }
+    
+    /**
+     * This is a hook for trashed_post
+     *
+     * @param integer $postId
+     */
+    public function trashedPost($postId){
+        $this->deletePost($postId);
     }
 }

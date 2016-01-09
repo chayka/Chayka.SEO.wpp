@@ -3,7 +3,8 @@
     "support": [
       "UriProcessing",
       "ConsolePages",
-      "Metaboxes"
+      "Metaboxes",
+      "PostProcessing"
     ],
     "register": [
       "registerActions",
@@ -26,8 +27,7 @@
     "chaykaFrameworkDeps": {
       "helpers": true,
       "mvc": true,
-      "wp": true,
-      "core": true
+      "wp": true
     },
     "initDep": true,
     "initDepPhpClass": "Chayka\\WP\\Plugin",
@@ -43,7 +43,6 @@
     "appAuthorEmail": "borix@tut.by",
     "appAuthorUri": "https://anotherguru.me",
     "appLicense": "Proprietary",
-    "ideaDeploymentServer": "WP Plugins",
     "appClass": "Plugin",
     "helpers": [
       "option"

@@ -26,6 +26,14 @@
             <div class="buttons">
                 <button class="button button-primary button-large" data-ng-click="saveOptions();">Save</button>
             </div>
+            <div class="actions">
+                <div class="note">
+                    <strong>Heads up:</strong> sitemap us built automatically, but in case you need some manual hands on, here are some actions you can do:<br/><br/>
+                </div>
+                <button class="button button-primary button-large" data-button-ajax-request="/api/sitemap/patch-robots">Patch robots.txt</button><br/><br/>
+                <button class="button button-primary button-large" data-button-ajax-request="/api/sitemap/build">Build sitemap</button>
+                <button class="button button-danger button-large" data-button-ajax-request="/api/sitemap/flush" data-confirm="Are you sure?">Flush sitemap</button>
+            </div>
         </form>
     </div>
 </div>
