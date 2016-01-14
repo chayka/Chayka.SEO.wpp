@@ -33,9 +33,13 @@ class Plugin extends WP\Plugin{
      * Register your action hooks here using $this->addAction();
      */
     public function registerActions() {
-        $this->addAction('user_register', 'saveUser');
-        $this->addAction('profile_update', 'saveUser');
-        $this->addAction('delete_user', 'deleteUser');
+        $this->addAction('user_register', 'saveUser', 100);
+        $this->addAction('profile_update', 'saveUser', 100);
+        $this->addAction('delete_user', 'deleteUser', 100);
+
+        $this->addAction('created_term', 'saveTerm', 100, 3);
+        $this->addAction('edited_term', 'saveTerm', 100, 3);
+        $this->addAction('delete_term', 'deleteTerm', 100, 3);
     	/* chayka: registerActions */
     }
 
@@ -132,8 +136,28 @@ class Plugin extends WP\Plugin{
         if($enabled){
             $packSize = OptionHelper::getOption('maxEntryPackSize', 10);
             $barrel = floor($userId / $packSize);
-            $barrelFn = SitemapHelper::getSitemapPostsBarrelPath($postType, $barrel, true);
-            $xml = SitemapHelper::renderPostTypePackIndex($postType, $barrel, $packSize);
+            $barrelFn = SitemapHelper::getSitemapUsersBarrelPath($barrel, true);
+            $xml = SitemapHelper::renderUsersPackIndex($barrel, $packSize);
+            file_put_contents($barrelFn, $xml);
+            $indexFn = SitemapHelper::getSitemapIndexPath(true);
+            unlink($indexFn);
+        }
+
+    }
+
+    /**
+     * This function should be triggered on post insert / update / delete
+     *
+     * @param $termTaxonomyId
+     * @param $taxonomy
+     */
+    public function updateSitemapBarrelForTerm($termTaxonomyId, $taxonomy){
+        $enabled = OptionHelper::getOption('sitemap_need_taxonomy_' . $taxonomy);
+        if($enabled){
+            $packSize = OptionHelper::getOption('maxEntryPackSize', 10);
+            $barrel = floor($termTaxonomyId / $packSize);
+            $barrelFn = SitemapHelper::getSitemapTaxonomiesBarrelPath($taxonomy, $barrel, true);
+            $xml = SitemapHelper::renderTaxonomyPackIndex($taxonomy, $barrel, $packSize);
             file_put_contents($barrelFn, $xml);
             $indexFn = SitemapHelper::getSitemapIndexPath(true);
             unlink($indexFn);
@@ -187,4 +211,27 @@ class Plugin extends WP\Plugin{
     public function deleteUser($userId){
         $this->updateSitemapBarrelForPostId($userId);
     }
+
+    /**
+     * This is a hook for created_term, edited_term
+     *
+     * @param integer $termId
+     * @param integer $termTaxonomyId
+     * @param string $taxonomy
+     */
+    public function saveTerm($termId, $termTaxonomyId, $taxonomy){
+        $this->updateSitemapBarrelForTerm($termTaxonomyId, $taxonomy);
+    }
+
+    /**
+     * This is a hook for deleted_term
+     *
+     * @param integer $termId
+     * @param integer $termTaxonomyId
+     * @param string $taxonomy
+     */
+    public function deleteTerm($termId, $termTaxonomyId, $taxonomy){
+        $this->updateSitemapBarrelForTerm($termTaxonomyId, $taxonomy);
+    }
+
 }
