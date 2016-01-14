@@ -3,23 +3,54 @@
 <div data-ng-cloak>
     <div data-ng-controller="optionsForm" data-ng-init="namespace = 'Chayka.SEO'">
         <form data-form-validator="validator" novalidate="novalidate">
+            <h3>Sitemap options</h3>
             <div class="form_field fullsize custom_sitemap_paths" data-form-field="customSitemapPaths">
                 <label class="">Custom Sitemap Paths</label><textarea data-ng-init="options.customSitemapPaths=''" data-ng-model="options.customSitemapPaths" title="Custom Sitemap Paths"></textarea>
             </div>
             <div class="note" data-ng-init="sitemapPackOptions = {'none':'No','yearly':'Yearly','monthly':'Monthly'}" ></div>
-            <?php $postTypes = get_post_types(['public'=>true]); unset($postTypes['attachment']);?>
             <div class="form_field stretch max_entry_pack_size" data-form-field="maxEntryPackSize">
                 <label class="width70">Max Entry Pack Size</label><input type="text" data-ng-init="options.maxEntryPackSize='10'" data-ng-model="options.maxEntryPackSize" title="Max Entry Pack Size"/>
             </div>
+
+            <?php $navMenus = wp_get_nav_menus();?>
+            <label>Nav Menus:</label>
+            <div class="form_field checkboxes sitemap_need_type">
+                <?php foreach($navMenus as $navMenu):?>
+                    <label>
+                        <input type="checkbox" data-ng-init="options['sitemap_need_nav_menu_<?php echo $navMenu->slug?>']='1'" data-ng-model="options['sitemap_need_nav_menu_<?php echo $navMenu->slug?>']" data-ng-true-value="'1'" data-ng-false-value="'0'" title="<?php echo $navMenu->name?>"/>
+                        <?php echo $navMenu->name;?>
+                    </label>
+                <?php endforeach;?>
+            </div>
+
+            <?php $postTypes = get_post_types(['public'=>true], 'objects'); unset($postTypes['attachment']);?>
             <label>Sitemap Post Types:</label>
             <div class="form_field checkboxes sitemap_need_type">
-                <?php foreach($postTypes as $postType):?>
+                <?php foreach($postTypes as $postType => $fields):?>
                 <label>
-                    <input type="checkbox" data-ng-init="options.sitemap_need_type_<?php echo $postType?>='1'" data-ng-model="options.sitemap_need_type_<?php echo $postType?>" data-ng-true-value="'1'" data-ng-false-value="'0'" title="<?php echo $postType?>"/>
-                    <?php echo $postType?>
+                    <input type="checkbox" data-ng-init="options['sitemap_need_type_<?php echo $postType?>']='1'" data-ng-model="options['sitemap_need_type_<?php echo $postType?>']" data-ng-true-value="'1'" data-ng-false-value="'0'" title="<?php echo $postType?>"/>
+                    <?php echo $fields->labels->name?>
                 </label>
                 <?php endforeach;?>
             </div>
+
+            <?php $taxonomies = get_taxonomies(['public'=>true], 'objects'); //var_dump($taxonomies);?>
+            <label>Taxonomies:</label>
+            <div class="form_field checkboxes sitemap_need_taxonomye">
+                <?php foreach($taxonomies as $taxonomy => $fields):?>
+                    <label>
+                        <input type="checkbox" data-ng-init="options['sitemap_need_taxonomy_<?php echo $taxonomy?>']='1'" data-ng-model="options['sitemap_need_taxonomy_<?php echo $taxonomy?>']" data-ng-true-value="'1'" data-ng-false-value="'0'" title="<?php echo $taxonomy?>"/>
+                        <?php echo $fields->labels->name?>
+                    </label>
+                <?php endforeach;?>
+            </div>
+            <div class="form_field fullsize checkbox sitemap_need_users" data-form-field="sitemap_need_users">
+                <label>
+                    <input type="checkbox" data-ng-init="options.sitemap_need_users='1'" data-ng-model="options.sitemap_need_users" data-ng-true-value="'1'" data-ng-false-value="'0'" title="Users"/>
+                    Need User Profiles
+                </label>
+            </div>
+
 
 
 	        <!-- chayka: fields -->

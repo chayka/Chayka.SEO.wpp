@@ -33,6 +33,9 @@ class Plugin extends WP\Plugin{
      * Register your action hooks here using $this->addAction();
      */
     public function registerActions() {
+        $this->addAction('user_register', 'saveUser');
+        $this->addAction('profile_update', 'saveUser');
+        $this->addAction('delete_user', 'deleteUser');
     	/* chayka: registerActions */
     }
 
@@ -110,7 +113,7 @@ class Plugin extends WP\Plugin{
         if($enabled){
             $packSize = OptionHelper::getOption('maxEntryPackSize', 10);
             $barrel = floor($postId / $packSize);
-            $barrelFn = SitemapHelper::getSitemapBarrelPath($postType, $barrel, true);
+            $barrelFn = SitemapHelper::getSitemapPostsBarrelPath($postType, $barrel, true);
             $xml = SitemapHelper::renderPostTypePackIndex($postType, $barrel, $packSize);
             file_put_contents($barrelFn, $xml);
             $indexFn = SitemapHelper::getSitemapIndexPath(true);
@@ -118,6 +121,26 @@ class Plugin extends WP\Plugin{
         }
 
     }
+
+    /**
+     * This function should be triggered on post insert / update / delete
+     *
+     * @param $userId
+     */
+    public function updateSitemapBarrelForUserId($userId){
+        $enabled = OptionHelper::getOption('sitemap_need_users');
+        if($enabled){
+            $packSize = OptionHelper::getOption('maxEntryPackSize', 10);
+            $barrel = floor($userId / $packSize);
+            $barrelFn = SitemapHelper::getSitemapPostsBarrelPath($postType, $barrel, true);
+            $xml = SitemapHelper::renderPostTypePackIndex($postType, $barrel, $packSize);
+            file_put_contents($barrelFn, $xml);
+            $indexFn = SitemapHelper::getSitemapIndexPath(true);
+            unlink($indexFn);
+        }
+
+    }
+
 
     /**
      * This is a hook for save_post
@@ -145,5 +168,23 @@ class Plugin extends WP\Plugin{
      */
     public function trashedPost($postId){
         $this->deletePost($postId);
+    }
+
+    /**
+     * This is a hook for user_register, profile_update
+     *
+     * @param integer $userId
+     */
+    public function saveUser($userId){
+        $this->updateSitemapBarrelForPostId($userId);
+    }
+
+    /**
+     * This is a hook for delete_user
+     *
+     * @param integer $userId
+     */
+    public function deleteUser($userId){
+        $this->updateSitemapBarrelForPostId($userId);
     }
 }

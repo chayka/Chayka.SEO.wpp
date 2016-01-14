@@ -4,21 +4,28 @@ use Chayka\Helpers\Util;
 /**
  * @var Chayka\WP\Models\PostModel $post
  */
-$post = $this->post;
+$entry = $this->entry;
 
 $loc        = '/';
 $lastMod    = new DateTime();
 $changeFreq = 'monthly';
 $priority   = 0.5;
+$date       = new DateTime();
 
-if(is_array($post)){
-    $loc        = Util::getItem($post, 'loc', $loc);
-    $lastMod    = Util::getItem($post, 'lastmod', $lastMod);
-    $changeFreq = Util::getItem($post, 'changefreq', $changeFreq);
-    $priority   = Util::getItem($post, 'priority', $priority);
-}else if($post instanceof \Chayka\WP\Models\PostModel){
-    $loc     = $post->getHref();
-    $lastMod = $post->getDtModified();
+if(is_array($entry)){
+    $loc        = Util::getItem($entry, 'loc', $loc);
+    $lastMod    = Util::getItem($entry, 'lastmod', $lastMod);
+    $changeFreq = Util::getItem($entry, 'changefreq', $changeFreq);
+    $priority   = Util::getItem($entry, 'priority', $priority);
+}else if($entry instanceof \Chayka\WP\Models\PostModel){
+    $loc     = $entry->getHref();
+    $lastMod = $entry->getDtModified();
+}else if($entry instanceof \Chayka\WP\Models\UserModel){
+    $loc     = $entry->getProfileLink();
+    $lastMod = $entry->getRegistered();
+}else if($entry instanceof \Chayka\WP\Models\TermModel){
+    $loc     = $entry->getHref();
+    $lastMod = $date;
 }
 
 
@@ -27,7 +34,7 @@ if(is_array($post)){
 
         <loc><?php echo Util::getAbsoluteUrl($loc);?></loc>
 
-        <lastmod><?php echo \Chayka\Helpers\DateHelper::datetimeToJsonStr($post->getDtModified());?></lastmod>
+        <lastmod><?php echo \Chayka\Helpers\DateHelper::datetimeToJsonStr($lastMod);?></lastmod>
 
         <changefreq>monthly</changefreq>
 
