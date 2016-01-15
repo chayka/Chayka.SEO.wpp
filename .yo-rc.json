@@ -54,7 +54,13 @@
       "Admin": [
         "seo"
       ],
-      "Sitemap": []
-    }
+      "Sitemap": [],
+      "Metabox": [
+        "seo"
+      ]
+    },
+    "metaboxes": [
+      "seo"
+    ]
   }
 }

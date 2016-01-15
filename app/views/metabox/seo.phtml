@@ -1,0 +1,18 @@
+<div class="metabox" data-ng-cloak data-ng-controller="metabox">
+	<div data-form-validator="validator">
+        <?php /* description */
+            $name = 'metabox-description';
+            $value = $this->post->getMeta('description');
+        ?>
+		<div class="form_field fullsize description" data-form-field="description">
+			<label  class="">Description</label><textarea name = "<?php echo $name;?>" data-ng-init="meta.description='<?php $this->escape($value); ?>' || ''" data-ng-model="meta.description" title="Description"></textarea>
+		</div>        <?php /* keywords */
+            $name = 'metabox-keywords';
+            $value = $this->post->getMeta('keywords');
+        ?>
+		<div class="form_field fullsize keywords" data-form-field="keywords">
+			<label  class="">Keywords</label><textarea name = "<?php echo $name;?>" data-ng-init="meta.keywords='<?php $this->escape($value); ?>' || ''" data-ng-model="meta.keywords" title="Keywords"></textarea>
+		</div>
+        <!-- chayka: fields -->
+    </div>
+</div>

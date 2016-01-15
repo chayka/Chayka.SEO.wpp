@@ -3,6 +3,20 @@
 <div data-ng-cloak>
     <div data-ng-controller="optionsForm" data-ng-init="namespace = 'Chayka.SEO'">
         <form data-form-validator="validator" novalidate="novalidate">
+            <h3>Meta fields options</h3>
+            <div class="form_field fullsize default_description" data-form-field="defaultDescription">
+                <label class="">Default description</label><textarea data-ng-init="options.defaultDescription=''" data-ng-model="options.defaultDescription" title="Default description"></textarea>
+            </div>
+            <div class="form_field fullsize default_keywords" data-form-field="defaultKeywords">
+                <label class="">Default keywords</label><textarea data-ng-init="options.defaultKeywords=''" data-ng-model="options.defaultKeywords" title="Default keywords"></textarea>
+            </div>
+            <div class="form_field fullsize checkbox render_meta_fields" data-form-field="renderMetaFields">
+                <label>
+                    <input type="checkbox" data-ng-init="options.renderMetaFields=''" data-ng-model="options.renderMetaFields" data-ng-true-value="'1'" data-ng-false-value="''" title="Render meta fields"/>
+                    Render meta fields
+                </label>
+            </div>
+
             <h3>Sitemap options</h3>
             <div class="form_field fullsize custom_sitemap_paths" data-form-field="customSitemapPaths">
                 <label class="">Custom Sitemap Paths</label><textarea data-ng-init="options.customSitemapPaths=''" data-ng-model="options.customSitemapPaths" title="Custom Sitemap Paths"></textarea>
@@ -50,8 +64,6 @@
                     Need User Profiles
                 </label>
             </div>
-
-
 
 	        <!-- chayka: fields -->
             <div class="buttons">

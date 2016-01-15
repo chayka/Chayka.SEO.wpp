@@ -40,6 +40,10 @@ class Plugin extends WP\Plugin{
         $this->addAction('created_term', 'saveTerm', 100, 3);
         $this->addAction('edited_term', 'saveTerm', 100, 3);
         $this->addAction('delete_term', 'deleteTerm', 100, 3);
+
+        if(OptionHelper::getOption('renderMetaFields')){
+            $this->addAction('wp_head', 'renderMeta');
+        }
     	/* chayka: registerActions */
     }
 
@@ -86,6 +90,10 @@ class Plugin extends WP\Plugin{
      * Add custom metaboxes here via addMetaBox() calls;
      */
     public function registerMetaBoxes(){
+        if(OptionHelper::getOption('renderMetaFields')){
+            $this->addMetaBox('seo', 'SEO', '/metabox/seo', 'normal', 'high', null);
+        }
+
         /* chayka: registerMetaBoxes */
     }
 
@@ -102,7 +110,59 @@ class Plugin extends WP\Plugin{
     public function registerSidebars() {
 		/* chayka: registerSidebars */
     }
-    
+
+    /**
+     * Render meta tags if enabled
+     */
+    public function renderMeta(){
+        global $post;
+        $view = self::getView();
+
+        $description = WP\Helpers\HtmlHelper::getMetaDescription();
+        if(!$description){
+            if(is_single() || is_page()){
+                $description = get_post_meta($post->ID, 'description', true);
+                if(!$description){
+                    $description = get_the_excerpt();
+                }
+            }
+            if(is_tax()){
+                $description = term_description();
+            }
+        }
+        if(!$description){
+            $description = OptionHelper::getOption('defaultDescription');
+        }
+
+        $view->assign('description', $description);
+
+        $keywords = WP\Helpers\HtmlHelper::getMetaKeywords();
+        if(!$keywords){
+            if(is_single() || is_page()){
+                $keywords = get_post_meta($post->ID, 'keywords', true);
+                if(!$keywords){
+                    $richPost = WP\Models\PostModel::unpackDbRecord($post);
+                    $terms = $richPost->loadTerms();
+                    $keywords = [];
+                    if($terms){
+                        foreach($terms as $taxonomy=>$ts){
+                            $keywords = array_merge($keywords, $ts);
+                        }
+                    }
+                    $keywords = array_unique($keywords);
+                    $keywords = join(', ', $keywords);
+                }
+            }
+        }
+        if(!$keywords){
+            $keywords = OptionHelper::getOption('defaultKeywords');
+        }
+
+        $view->assign('keywords', $keywords);
+
+        echo $view->render('seo/meta.phtml');
+    }
+
     /* postProcessing */
 
     /**

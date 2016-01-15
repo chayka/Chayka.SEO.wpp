@@ -1,0 +1,5 @@
+<?php if($this->description):?>
+    <meta name="description" content="<?php $this->escape($this->description); ?>">
+<?php endif; if ( $this->keywords != "" ) :?>
+    <meta name="keywords" content="<?php $this->escape($this->keywords);?>">
+<?php endif;?>
