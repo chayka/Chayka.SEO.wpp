@@ -87,21 +87,21 @@ class Plugin extends WP\Plugin{
     }
     
     /**
-     * Add custom metaboxes here via addMetaBox() calls;
+     * Add custom metaboxes here via addMetabox() calls;
      */
-    public function registerMetaBoxes(){
+    public function registerMetaboxes(){
         if(OptionHelper::getOption('renderMetaFields')){
-            $this->addMetaBox('seo', 'SEO', '/metabox/seo', 'normal', 'high', null);
+            $this->addMetabox('seo', 'SEO', '/metabox/seo', 'normal', 'high', null);
         }
 
-        /* chayka: registerMetaBoxes */
+        /* chayka: registerMetaboxes */
     }
 
     /**
-     * Remove registered metaboxes here via removeMetaBox() calls;
+     * Remove registered metaboxes here via removeMetabox() calls;
      */
-    public function unregisterMetaBoxes(){
-        /* chayka: unregisterMetaBoxes */
+    public function unregisterMetaboxes(){
+        /* chayka: unregisterMetaboxes */
     }
 
     /**
