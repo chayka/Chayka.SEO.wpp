@@ -172,16 +172,18 @@ class Plugin extends WP\Plugin{
      */
     public function updateSitemapBarrelForPostId($postId){
         $post = WP\Models\PostModel::selectById($postId);
-        $postType = $post->getType();
-        $enabled = OptionHelper::getOption('sitemap_need_type_' . $postType);
-        if($enabled){
-            $packSize = OptionHelper::getOption('maxEntryPackSize', 10);
-            $barrel = floor($postId / $packSize);
-            $barrelFn = SitemapHelper::getSitemapPostsBarrelPath($postType, $barrel, true);
-            $xml = SitemapHelper::renderPostTypePackIndex($postType, $barrel, $packSize);
-            file_put_contents($barrelFn, $xml);
-            $indexFn = SitemapHelper::getSitemapIndexPath(true);
-            unlink($indexFn);
+        if($post){
+            $postType = $post->getType();
+            $enabled = OptionHelper::getOption('sitemap_need_type_' . $postType);
+            if($enabled){
+                $packSize = OptionHelper::getOption('maxEntryPackSize', 10);
+                $barrel = floor($postId / $packSize);
+                $barrelFn = SitemapHelper::getSitemapPostsBarrelPath($postType, $barrel, true);
+                $xml = SitemapHelper::renderPostTypePackIndex($postType, $barrel, $packSize);
+                file_put_contents($barrelFn, $xml);
+                $indexFn = SitemapHelper::getSitemapIndexPath(true);
+                unlink($indexFn);
+            }
         }
 
     }
@@ -222,7 +224,6 @@ class Plugin extends WP\Plugin{
             $indexFn = SitemapHelper::getSitemapIndexPath(true);
             unlink($indexFn);
         }
-
     }
 
 
@@ -269,7 +270,7 @@ class Plugin extends WP\Plugin{
      * @param integer $userId
      */
     public function deleteUser($userId){
-        $this->updateSitemapBarrelForPostId($userId);
+        $this->updateSitemapBarrelForUserId($userId);
     }
 
     /**
